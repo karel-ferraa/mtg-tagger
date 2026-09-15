@@ -15,10 +15,14 @@ public class TagServiceImpl implements TagService {
 	@Autowired
 	private TagServiceImpl(TagRepository tagRepository) {
 		this.tagRepository = tagRepository;
-		tagRepository.save(new Tag(EnumTagType.ART, "sword", null, null));
-		Tag functionDraw = new Tag(EnumTagType.FUNCTION, "draw", null, null);
+		tagRepository.save(new Tag(EnumTagType.ART, "sword"));
+		Tag functionDraw = new Tag(EnumTagType.FUNCTION, "draw");
+		Tag functionRummage = new Tag(EnumTagType.FUNCTION, "rummage");
 		tagRepository.save(functionDraw);
-		tagRepository.save(new Tag(EnumTagType.FUNCTION, "rummage", List.of(functionDraw), null));
+		tagRepository.save(functionRummage);
+		functionRummage.addParentTag(functionDraw);
+		tagRepository.save(functionDraw);
+		tagRepository.save(functionRummage);
 	}
 
 	public Collection<Tag> getAllTags() {

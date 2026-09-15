@@ -2,6 +2,8 @@ package org.tagger.entities;
 
 import java.util.*;
 import jakarta.persistence.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @IdClass(TagKey.class)
 @Entity
@@ -16,11 +18,16 @@ public class Tag {
 	private Collection<Tag> childTags;
 
 	public Tag() {}
-	public Tag(EnumTagType type, String name, Collection<Tag> parentTags, Collection<Tag> childTags) {
+	public Tag(EnumTagType type, String name) {
 		this.type = type;
 		this.name = name;
-		this.parentTags = parentTags;
-		this.childTags = childTags;
+		this.parentTags = new ArrayList();
+		this.childTags = new ArrayList();
+	}
+	public Tag(EnumTagType type, String name, Collection<Tag> parentTags, Collection<Tag> childTags) {
+		this(type, name);
+		if (parentTags != null) { this.parentTags = parentTags; }
+		if (childTags != null) { this.childTags = childTags; }
 	}
 
 	public EnumTagType getType() {
@@ -49,17 +56,33 @@ public class Tag {
 		this.childTags = childTags;
 	}
 
+	public void addParentTag(Tag parentTag) {
+		final Logger logger = LoggerFactory.getLogger(Tag.class);
+
+		logger.info("Tag.java inside addParentTag " + this.parentTags);
+		if (!this.parentTags.contains(parentTag)) {
+			this.parentTags.add(parentTag);
+			parentTag.addChildTag(this);
+		}
+	}
+	public void addChildTag(Tag childTag) {
+		if (!childTags.contains(childTag)) {
+			this.childTags.add(childTag);
+			childTag.addParentTag(this);
+		}
+	}
+
 	@Override
 	public String toString() {
 		String res = "";
 		res += "type: " + this.type;
-		res += "name: " + this.name;
-		res += "parent tags: [";
+		res += " name: " + this.name;
+		res += " parent tags: [";
 		for (var parentTag: this.parentTags) {
 			res += parentTag.getName() + ",";
 		}
-		res += "] ";
-		res += "child tags: [";
+		res += "]";
+		res += " child tags: [";
 		for (var childTag: this.childTags) {
 			res += childTag.getName() + ",";
 		}

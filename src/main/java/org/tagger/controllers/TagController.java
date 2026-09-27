@@ -19,4 +19,16 @@ public class TagController {
 		logger.info("getAllTags");
 		return tagService.getAllTags();
 	}
+
+	@GetMapping("/tags/art")
+	public Collection<Tag> getArtTags() {
+		logger.info("getArtTags");
+		return tagService.getArtTags();
+	}
+
+	@GetMapping("/tags/function")
+	public Collection<Tag> getFunctionTags() {
+		logger.info("getFunctionTags");
+		return tagService.getFunctionTags();
+	}
 }

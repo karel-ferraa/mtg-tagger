@@ -5,4 +5,6 @@ import java.util.*;
 
 public interface TagService {
 	public Collection<Tag> getAllTags();
+	public Collection<Tag> getArtTags();
+	public Collection<Tag> getFunctionTags();
 }

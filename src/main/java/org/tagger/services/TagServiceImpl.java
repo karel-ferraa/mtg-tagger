@@ -28,4 +28,11 @@ public class TagServiceImpl implements TagService {
 	public Collection<Tag> getAllTags() {
 		return (Collection<Tag>) tagRepository.findAll();
 	}
+
+	public Collection<Tag> getArtTags() {
+		return (Collection<Tag>) tagRepository.findByType(EnumTagType.ART);
+	}
+	public Collection<Tag> getFunctionTags() {
+		return (Collection<Tag>) tagRepository.findByType(EnumTagType.FUNCTION);
+	}
 }

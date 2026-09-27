@@ -78,4 +78,14 @@ public class TagController {
 			tagService.removeParentTags(type, name, listTagKey);
 		}
 	}
+	@DeleteMapping(value="/tags/{type}/{name}", params="!parent")
+	@ResponseStatus(HttpStatus.OK)
+	public void deleteTag(
+			@PathVariable("type") EnumTagType type,
+			@PathVariable("name") String name
+			)
+	{
+		logger.info("deleteTag");
+		tagService.deleteTag(type, name);
+	}
 }

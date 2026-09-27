@@ -12,4 +12,5 @@ public interface TagService {
 	public void addChildTags(EnumTagType type, String name, List<TagKey> listTagKey);
 	public void removeParentTags(EnumTagType type, String name, List<TagKey> listTagKey);
 	public void removeChildTags(EnumTagType type, String name, List<TagKey> listTagKey);
+	public void deleteTag(EnumTagType type, String name);
 }

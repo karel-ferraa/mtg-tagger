@@ -3,11 +3,14 @@ import org.tagger.entities.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 @Service
 public class TagServiceImpl implements TagService {
+	final Logger logger = LoggerFactory.getLogger(TagServiceImpl.class);
 	//@Autowired
 	public TagRepository tagRepository;
 
@@ -74,5 +77,24 @@ public class TagServiceImpl implements TagService {
 			tagRepository.save(childTag);
 		}
 		tagRepository.save(parentTag);
+	}
+	public void deleteTag(EnumTagType type, String name) {
+		Tag tagToDelete = tagRepository.findByTypeAndName(type, name);
+		// perform a copy of the parentTags to prevent looped array modification inside the loop
+		Collection<Tag> parentTags = new ArrayList<Tag>();
+		parentTags.addAll(tagToDelete.getParentTags());
+		for (var parentTag : parentTags) {
+			tagToDelete.removeParentTag(parentTag);
+			tagRepository.save(parentTag);
+		}
+		// perform a copy of the parentTags to prevent looped array modification inside the loop
+		Collection<Tag> childTags = new ArrayList<Tag>();
+		childTags.addAll(tagToDelete.getChildTags());
+		for (var childTag : childTags) {
+			tagToDelete.removeChildTag(childTag);
+			tagRepository.save(childTag);
+		}
+		tagRepository.save(tagToDelete);
+		tagRepository.delete(tagToDelete);
 	}
 }

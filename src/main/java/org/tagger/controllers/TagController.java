@@ -26,11 +26,19 @@ public class TagController {
 		logger.info("getArtTags");
 		return tagService.getArtTags();
 	}
-
 	@GetMapping("/tags/function")
 	public Collection<Tag> getFunctionTags() {
 		logger.info("getFunctionTags");
 		return tagService.getFunctionTags();
+	}
+	@GetMapping("/tags/{type}/{name}")
+	public Tag getTag(
+			@PathVariable("type") EnumTagType type,
+			@PathVariable("name") String name
+		)
+	{
+		logger.info("getTag");
+		return tagService.getTag(type, name);
 	}
 
 	@PostMapping("/tags")

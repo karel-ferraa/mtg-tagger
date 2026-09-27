@@ -35,4 +35,8 @@ public class TagServiceImpl implements TagService {
 	public Collection<Tag> getFunctionTags() {
 		return (Collection<Tag>) tagRepository.findByType(EnumTagType.FUNCTION);
 	}
+
+	public void createTag(EnumTagType type, String name) {
+		tagRepository.save(new Tag(type, name));
+	}
 }

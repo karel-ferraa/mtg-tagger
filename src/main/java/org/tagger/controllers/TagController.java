@@ -4,6 +4,7 @@ import org.tagger.entities.*;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.*;
@@ -30,5 +31,15 @@ public class TagController {
 	public Collection<Tag> getFunctionTags() {
 		logger.info("getFunctionTags");
 		return tagService.getFunctionTags();
+	}
+
+	@PostMapping("/tags")
+	@ResponseStatus(HttpStatus.OK)
+	public void createTag(
+			@RequestBody(required = true) TagKey tagKey
+			)
+	{
+		logger.info("createTag");
+		tagService.createTag(tagKey.getType(), tagKey.getName());
 	}
 }

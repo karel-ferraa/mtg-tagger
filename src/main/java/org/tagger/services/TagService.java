@@ -7,4 +7,5 @@ public interface TagService {
 	public Collection<Tag> getAllTags();
 	public Collection<Tag> getArtTags();
 	public Collection<Tag> getFunctionTags();
+	public void createTag(EnumTagType type, String name);
 }

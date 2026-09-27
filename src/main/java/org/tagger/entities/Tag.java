@@ -71,6 +71,21 @@ public class Tag {
 			childTag.addParentTag(this);
 		}
 	}
+	public void removeParentTag(Tag parentTag) {
+		final Logger logger = LoggerFactory.getLogger(Tag.class);
+
+		logger.info("Tag.java inside removeParentTag " + this.parentTags);
+		if (this.parentTags.contains(parentTag)) {
+			this.parentTags.remove(parentTag);
+			parentTag.removeChildTag(this);
+		}
+	}
+	public void removeChildTag(Tag childTag) {
+		if (childTags.contains(childTag)) {
+			this.childTags.remove(childTag);
+			childTag.removeParentTag(this);
+		}
+	}
 
 	@Override
 	public String toString() {

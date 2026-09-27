@@ -57,4 +57,22 @@ public class TagServiceImpl implements TagService {
 		}
 		tagRepository.save(parentTag);
 	}
+	public void removeParentTags(EnumTagType type, String name, List<TagKey> listTagKey) {
+		Tag childTag = tagRepository.findByTypeAndName(type, name);
+		for (var tagKey : listTagKey) {
+			Tag parentTag = tagRepository.findByTypeAndName(tagKey.getType(), tagKey.getName());
+			childTag.removeParentTag(parentTag);
+			tagRepository.save(parentTag);
+		}
+		tagRepository.save(childTag);
+	}
+	public void removeChildTags(EnumTagType type, String name, List<TagKey> listTagKey) {
+		Tag parentTag = tagRepository.findByTypeAndName(type, name);
+		for (var tagKey : listTagKey) {
+			Tag childTag = tagRepository.findByTypeAndName(tagKey.getType(), tagKey.getName());
+			parentTag.removeChildTag(childTag);
+			tagRepository.save(childTag);
+		}
+		tagRepository.save(parentTag);
+	}
 }

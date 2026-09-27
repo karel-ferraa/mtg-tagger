@@ -60,4 +60,22 @@ public class TagController {
 			tagService.addParentTags(type, name, listTagKey);
 		}
 	}
+
+	@DeleteMapping("/tags/{type}/{name}")
+	@ResponseStatus(HttpStatus.OK)
+	public void removeFamilyTags(
+			@PathVariable("type") EnumTagType type,
+			@PathVariable("name") String name,
+			@RequestParam(value="parent", required = true) boolean parent, // whether this tag is the parent of the tags to be removed (true) or is the child of the tags to be removed (false)
+			@RequestBody(required = true) List<TagKey> listTagKey
+			)
+	{
+		if (parent) {
+			logger.info("removeFamilyTags - remove children tags");
+			tagService.removeChildTags(type, name, listTagKey);
+		} else {
+			logger.info("removeFamilyTags - remove parent tags");
+			tagService.removeParentTags(type, name, listTagKey);
+		}
+	}
 }

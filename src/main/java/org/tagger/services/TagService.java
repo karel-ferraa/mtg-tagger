@@ -10,4 +10,6 @@ public interface TagService {
 	public void createTag(EnumTagType type, String name);
 	public void addParentTags(EnumTagType type, String name, List<TagKey> listTagKey);
 	public void addChildTags(EnumTagType type, String name, List<TagKey> listTagKey);
+	public void removeParentTags(EnumTagType type, String name, List<TagKey> listTagKey);
+	public void removeChildTags(EnumTagType type, String name, List<TagKey> listTagKey);
 }

@@ -1,6 +1,7 @@
 package org.tagger.controllers;
 import org.tagger.services.*;
 import org.tagger.entities.*;
+import org.tagger.entities.exceptions.*;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +47,13 @@ public class TagController {
 	public void createTag(
 			@RequestBody(required = true) TagKey tagKey
 			)
-	{
+	throws InvalidBodyException {
 		logger.info("createTag");
-		tagService.createTag(tagKey.getType(), tagKey.getName());
+		if (tagKey.getType() == null || tagKey.getName() == null) {
+			throw new InvalidBodyException("missing type or name in body. body should be of the form {'type':'art/function', 'name':'tag_name'}");
+		} else {
+			tagService.createTag(tagKey.getType(), tagKey.getName());
+		}
 	}
 
 	@PutMapping("/tags/{type}/{name}")
@@ -59,7 +64,7 @@ public class TagController {
 			@RequestParam(value="parent", required = true) boolean parent, // whether this tag is the parent of the tags to be added (true) or is the child of the tags to be added (false)
 			@RequestBody(required = true) List<TagKey> listTagKey
 			)
-	{
+	throws NonExistentTagException {
 		if (parent) {
 			logger.info("addFamilyTags - add children tags");
 			tagService.addChildTags(type, name, listTagKey);
@@ -77,7 +82,7 @@ public class TagController {
 			@RequestParam(value="parent", required = true) boolean parent, // whether this tag is the parent of the tags to be removed (true) or is the child of the tags to be removed (false)
 			@RequestBody(required = true) List<TagKey> listTagKey
 			)
-	{
+	throws NonExistentTagException {
 		if (parent) {
 			logger.info("removeFamilyTags - remove children tags");
 			tagService.removeChildTags(type, name, listTagKey);
@@ -92,8 +97,14 @@ public class TagController {
 			@PathVariable("type") EnumTagType type,
 			@PathVariable("name") String name
 			)
-	{
+	throws NonExistentTagException {
 		logger.info("deleteTag");
 		tagService.deleteTag(type, name);
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({InvalidBodyException.class, NonExistentTagException.class})
+	public ResponseEntity<String> handleInvalidBodyException(Exception ex) {
+		return ResponseEntity.badRequest().body(ex.getMessage());
 	}
 }

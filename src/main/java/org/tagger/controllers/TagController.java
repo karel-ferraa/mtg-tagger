@@ -42,4 +42,22 @@ public class TagController {
 		logger.info("createTag");
 		tagService.createTag(tagKey.getType(), tagKey.getName());
 	}
+
+	@PutMapping("/tags/{type}/{name}")
+	@ResponseStatus(HttpStatus.OK)
+	public void addFamilyTags(
+			@PathVariable("type") EnumTagType type,
+			@PathVariable("name") String name,
+			@RequestParam(value="parent", required = true) boolean parent, // whether this tag is the parent of the tags to be added (true) or is the child of the tags to be added (false)
+			@RequestBody(required = true) List<TagKey> listTagKey
+			)
+	{
+		if (parent) {
+			logger.info("addFamilyTags - add children tags");
+			tagService.addChildTags(type, name, listTagKey);
+		} else {
+			logger.info("addFamilyTags - add parent tags");
+			tagService.addParentTags(type, name, listTagKey);
+		}
+	}
 }

@@ -8,7 +8,7 @@ public class HelloController {
 	final Logger logger = LoggerFactory.getLogger(HelloController.class);
 	@GetMapping("/")
 	public String hello() {
-		logger.info("Hello World");
-		return "hello";
+		logger.info("Root endpoint");
+		return "This is the root endpoint for the card tags api";
 	}
 }
